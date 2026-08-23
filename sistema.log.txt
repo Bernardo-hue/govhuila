@@ -1,0 +1,480 @@
+2026-08-22 15:10:57,919 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:10:57,923 - INFO - Atualizando schema da versão 0 para 3
+2026-08-22 15:10:57,936 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:10:57,942 - ERROR - Erro na conexão com a base de dados: table users has no column named created_at
+2026-08-22 15:10:57,943 - ERROR - Erro fatal na inicialização da base de dados: table users has no column named created_at
+2026-08-22 15:10:57,944 - ERROR - Erro crítico ao iniciar a aplicação: table users has no column named created_at
+2026-08-22 15:14:04,326 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:14:04,343 - INFO - Atualizando schema da versão 0 para 3
+2026-08-22 15:14:04,344 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:14:04,344 - ERROR - Erro na conexão com a base de dados: table users has no column named created_at
+2026-08-22 15:14:04,344 - ERROR - Erro fatal na inicialização da base de dados: table users has no column named created_at
+2026-08-22 15:14:04,344 - ERROR - Erro crítico ao iniciar a aplicação: table users has no column named created_at
+2026-08-22 15:14:09,249 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:14:09,256 - INFO - Atualizando schema da versão 0 para 3
+2026-08-22 15:14:09,256 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:14:09,256 - ERROR - Erro na conexão com a base de dados: table users has no column named created_at
+2026-08-22 15:14:09,256 - ERROR - Erro fatal na inicialização da base de dados: table users has no column named created_at
+2026-08-22 15:14:09,256 - ERROR - Erro crítico ao iniciar a aplicação: table users has no column named created_at
+2026-08-22 15:28:43,157 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:28:43,169 - INFO - Atualizando schema da versão 0 para 3
+2026-08-22 15:28:43,173 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:28:43,177 - ERROR - Erro na conexão com a base de dados: table users has no column named created_at
+2026-08-22 15:28:43,179 - ERROR - Erro fatal na inicialização da base de dados: table users has no column named created_at
+2026-08-22 15:28:43,184 - ERROR - Erro crítico ao iniciar a aplicação: table users has no column named created_at
+2026-08-22 15:33:21,389 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:33:21,404 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:33:21,436 - INFO - Coluna created_at adicionada à tabela users
+2026-08-22 15:33:21,467 - INFO - Coluna type adicionada à tabela documents
+2026-08-22 15:33:21,498 - INFO - Coluna subcategory adicionada à tabela documents
+2026-08-22 15:33:21,514 - INFO - Coluna file_name adicionada à tabela documents
+2026-08-22 15:33:21,529 - INFO - Coluna file_size adicionada à tabela documents
+2026-08-22 15:33:21,545 - INFO - Coluna file_type adicionada à tabela documents
+2026-08-22 15:33:21,576 - INFO - Coluna updated_at adicionada à tabela documents
+2026-08-22 15:33:21,576 - INFO - Coluna updated_by adicionada à tabela documents
+2026-08-22 15:33:21,592 - INFO - Coluna description adicionada à tabela documents
+2026-08-22 15:33:21,608 - INFO - Coluna keywords adicionada à tabela documents
+2026-08-22 15:33:21,623 - INFO - Coluna security_level adicionada à tabela documents
+2026-08-22 15:33:21,639 - INFO - Coluna archive_period adicionada à tabela documents
+2026-08-22 15:33:21,654 - INFO - Coluna priority adicionada à tabela processes
+2026-08-22 15:33:21,686 - INFO - Coluna assigned_to adicionada à tabela processes
+2026-08-22 15:33:21,701 - INFO - Coluna deadline adicionada à tabela processes
+2026-08-22 15:33:21,717 - INFO - Coluna observations adicionada à tabela processes
+2026-08-22 15:33:21,733 - INFO - Coluna related_documents adicionada à tabela processes
+2026-08-22 15:33:21,748 - INFO - Migração de colunas concluída
+2026-08-22 15:33:21,748 - INFO - Atualizando schema da versão 0 para 3
+2026-08-22 15:33:21,748 - INFO - Dados iniciais criados com sucesso
+2026-08-22 15:33:21,764 - INFO - Base de dados inicializada com sucesso!
+2026-08-22 15:33:21,764 - INFO - Aplicação iniciada com sucesso
+2026-08-22 15:33:37,746 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:33:37,750 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:33:37,849 - INFO - Migração de colunas concluída
+2026-08-22 15:33:38,048 - INFO - Dados iniciais criados com sucesso
+2026-08-22 15:33:38,048 - INFO - Base de dados já está na versão mais recente
+2026-08-22 15:33:38,048 - INFO - Aplicação iniciada com sucesso
+2026-08-22 15:33:38,299 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:33:38,299 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:33:38,381 - INFO - Migração de colunas concluída
+2026-08-22 15:33:38,783 - INFO - Dados iniciais criados com sucesso
+2026-08-22 15:33:38,783 - INFO - Base de dados já está na versão mais recente
+2026-08-22 15:33:38,783 - INFO - Aplicação iniciada com sucesso
+2026-08-22 15:33:57,313 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:33:57,321 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:33:57,376 - INFO - Migração de colunas concluída
+2026-08-22 15:33:57,390 - INFO - Dados iniciais criados com sucesso
+2026-08-22 15:33:57,391 - INFO - Base de dados já está na versão mais recente
+2026-08-22 15:33:57,392 - INFO - Aplicação iniciada com sucesso
+2026-08-22 15:33:58,967 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:33:58,974 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:33:59,030 - INFO - Migração de colunas concluída
+2026-08-22 15:33:59,041 - INFO - Dados iniciais criados com sucesso
+2026-08-22 15:33:59,044 - INFO - Base de dados já está na versão mais recente
+2026-08-22 15:33:59,045 - INFO - Aplicação iniciada com sucesso
+2026-08-22 15:34:00,213 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:34:00,215 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:34:00,272 - INFO - Migração de colunas concluída
+2026-08-22 15:34:00,285 - INFO - Dados iniciais criados com sucesso
+2026-08-22 15:34:00,288 - INFO - Base de dados já está na versão mais recente
+2026-08-22 15:34:00,288 - INFO - Aplicação iniciada com sucesso
+2026-08-22 15:34:00,952 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 15:34:00,968 - INFO - Tabelas criadas com sucesso
+2026-08-22 15:34:01,017 - INFO - Migração de colunas concluída
+2026-08-22 15:34:01,038 - INFO - Dados iniciais criados com sucesso
+2026-08-22 15:34:01,039 - INFO - Base de dados já está na versão mais recente
+2026-08-22 15:34:01,040 - INFO - Aplicação iniciada com sucesso
+2026-08-22 16:17:17,668 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 16:17:17,677 - INFO - Tabelas criadas com sucesso
+2026-08-22 16:17:17,755 - INFO - Migração de colunas concluída
+2026-08-22 16:17:17,800 - INFO - Dados iniciais criados com sucesso
+2026-08-22 16:17:17,844 - INFO - Base de dados já está na versão mais recente
+2026-08-22 16:17:17,875 - INFO - Aplicação iniciada com sucesso
+2026-08-22 16:17:18,100 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 16:17:18,116 - INFO - Tabelas criadas com sucesso
+2026-08-22 16:17:18,250 - INFO - Migração de colunas concluída
+2026-08-22 16:17:18,267 - INFO - Dados iniciais criados com sucesso
+2026-08-22 16:17:18,271 - INFO - Base de dados já está na versão mais recente
+2026-08-22 16:17:18,273 - INFO - Aplicação iniciada com sucesso
+2026-08-22 16:18:47,475 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 16:18:47,486 - INFO - Tabelas criadas com sucesso
+2026-08-22 16:18:47,579 - INFO - Migração de colunas concluída
+2026-08-22 16:18:47,730 - INFO - Dados iniciais criados com sucesso
+2026-08-22 16:18:47,730 - INFO - Base de dados já está na versão mais recente
+2026-08-22 16:18:47,730 - INFO - Aplicação iniciada com sucesso
+2026-08-22 16:18:50,603 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 16:18:50,613 - INFO - Tabelas criadas com sucesso
+2026-08-22 16:18:50,701 - INFO - Migração de colunas concluída
+2026-08-22 16:18:50,888 - INFO - Dados iniciais criados com sucesso
+2026-08-22 16:18:50,888 - INFO - Base de dados já está na versão mais recente
+2026-08-22 16:18:50,888 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:20:29,771 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:20:29,804 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:20:29,857 - INFO - Migração de colunas concluída
+2026-08-22 21:20:29,868 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:20:29,868 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:20:29,869 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:20:55,501 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:20:55,505 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:20:55,582 - INFO - Migração de colunas concluída
+2026-08-22 21:20:55,590 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:20:55,591 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:20:55,591 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:21:04,197 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:21:04,213 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:21:04,291 - INFO - Migração de colunas concluída
+2026-08-22 21:21:04,298 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:21:04,299 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:21:04,300 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:21:04,371 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:21:04,378 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:21:04,478 - INFO - Migração de colunas concluída
+2026-08-22 21:21:04,487 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:21:04,488 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:21:04,489 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:21:17,612 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:21:17,625 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:21:17,696 - INFO - Migração de colunas concluída
+2026-08-22 21:21:17,704 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:21:17,722 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:21:17,725 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:21:38,047 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:21:38,054 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:21:38,105 - INFO - Migração de colunas concluída
+2026-08-22 21:21:38,119 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:21:38,120 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:21:38,121 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:22:00,031 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:22:00,041 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:22:00,107 - INFO - Migração de colunas concluída
+2026-08-22 21:22:00,120 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:22:00,122 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:22:00,124 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:22:33,522 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:22:33,529 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:22:33,582 - INFO - Migração de colunas concluída
+2026-08-22 21:22:33,590 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:22:33,601 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:22:33,602 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:28:26,252 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:28:26,263 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:28:26,349 - INFO - Migração de colunas concluída
+2026-08-22 21:28:26,417 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:28:26,486 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:28:26,567 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:28:51,038 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:28:51,052 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:28:51,112 - INFO - Migração de colunas concluída
+2026-08-22 21:28:51,124 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:28:51,126 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:28:51,127 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:28:51,904 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:28:51,909 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:28:51,965 - INFO - Migração de colunas concluída
+2026-08-22 21:28:51,973 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:28:51,975 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:28:51,975 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:28:54,190 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:28:54,200 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:28:54,254 - INFO - Migração de colunas concluída
+2026-08-22 21:28:54,266 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:28:54,267 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:28:54,267 - INFO - Aplicação iniciada com sucesso
+2026-08-22 21:29:02,072 - INFO - Iniciando inicialização da base de dados...
+2026-08-22 21:29:02,085 - INFO - Tabelas criadas com sucesso
+2026-08-22 21:29:02,157 - INFO - Migração de colunas concluída
+2026-08-22 21:29:02,163 - INFO - Dados iniciais criados com sucesso
+2026-08-22 21:29:02,163 - INFO - Base de dados já está na versão mais recente
+2026-08-22 21:29:02,163 - INFO - Aplicação iniciada com sucesso
+2026-08-23 08:30:59,265 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 08:30:59,294 - INFO - Tabelas criadas com sucesso
+2026-08-23 08:30:59,347 - INFO - Migração de colunas concluída
+2026-08-23 08:30:59,364 - INFO - Dados iniciais criados com sucesso
+2026-08-23 08:30:59,364 - INFO - Base de dados já está na versão mais recente
+2026-08-23 08:30:59,364 - INFO - Aplicação iniciada com sucesso
+2026-08-23 08:45:21,074 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 08:45:21,084 - INFO - Tabelas criadas com sucesso
+2026-08-23 08:45:21,336 - INFO - Migração de colunas concluída
+2026-08-23 08:45:21,398 - INFO - Dados iniciais criados com sucesso
+2026-08-23 08:45:21,398 - INFO - Base de dados já está na versão mais recente
+2026-08-23 08:45:21,402 - INFO - Aplicação iniciada com sucesso
+2026-08-23 08:52:46,347 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 08:52:46,353 - INFO - Tabelas criadas com sucesso
+2026-08-23 08:52:46,422 - INFO - Migração de colunas concluída
+2026-08-23 08:52:46,433 - INFO - Dados iniciais criados com sucesso
+2026-08-23 08:52:46,433 - INFO - Base de dados já está na versão mais recente
+2026-08-23 08:52:46,433 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:17:39,380 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:17:39,400 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:17:39,495 - INFO - Migração de colunas concluída
+2026-08-23 09:17:39,508 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:17:39,511 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:17:39,513 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:17:55,835 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:17:55,835 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:17:55,924 - INFO - Migração de colunas concluída
+2026-08-23 09:17:55,934 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:17:55,934 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:17:55,934 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:17:56,013 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:17:56,049 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:17:56,214 - INFO - Migração de colunas concluída
+2026-08-23 09:17:56,423 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:17:56,423 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:17:56,423 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:18:17,266 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:18:17,280 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:18:17,380 - INFO - Migração de colunas concluída
+2026-08-23 09:18:17,397 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:18:17,398 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:18:17,450 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:19:40,834 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:19:40,850 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:19:40,946 - INFO - Migração de colunas concluída
+2026-08-23 09:19:40,952 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:19:40,952 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:19:40,952 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:26:32,553 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:26:32,566 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:26:32,694 - INFO - Migração de colunas concluída
+2026-08-23 09:26:32,709 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:26:32,711 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:26:32,712 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:26:32,819 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:26:32,829 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:26:32,913 - INFO - Migração de colunas concluída
+2026-08-23 09:26:32,923 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:26:32,924 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:26:32,925 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:26:40,477 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:26:40,492 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:26:40,548 - INFO - Migração de colunas concluída
+2026-08-23 09:26:40,558 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:26:40,560 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:26:40,561 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:27:10,009 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:27:10,012 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:27:10,053 - INFO - Migração de colunas concluída
+2026-08-23 09:27:10,063 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:27:10,064 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:27:10,065 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:27:21,525 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:27:21,528 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:27:21,576 - INFO - Migração de colunas concluída
+2026-08-23 09:27:21,592 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:27:21,594 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:27:21,595 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:31:05,993 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:31:06,080 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:31:06,339 - INFO - Migração de colunas concluída
+2026-08-23 09:31:06,375 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:31:06,393 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:31:06,393 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:41:35,883 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:41:35,897 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:41:35,953 - INFO - Migração de colunas concluída
+2026-08-23 09:41:35,953 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:41:35,969 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:41:35,975 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:44:36,413 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:44:36,439 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:44:36,650 - INFO - Migração de colunas concluída
+2026-08-23 09:44:36,708 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:44:36,710 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:44:36,710 - INFO - Aplicação iniciada com sucesso
+2026-08-23 09:54:01,047 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 09:54:01,069 - INFO - Tabelas criadas com sucesso
+2026-08-23 09:54:01,146 - INFO - Migração de colunas concluída
+2026-08-23 09:54:01,146 - INFO - Dados iniciais criados com sucesso
+2026-08-23 09:54:01,161 - INFO - Base de dados já está na versão mais recente
+2026-08-23 09:54:01,163 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:23:33,377 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:23:33,403 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:23:33,536 - INFO - Migração de colunas concluída
+2026-08-23 10:23:33,544 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:23:33,544 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:23:33,544 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:28:49,379 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:28:49,402 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:28:49,502 - INFO - Migração de colunas concluída
+2026-08-23 10:28:49,519 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:28:49,520 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:28:49,521 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:30:42,698 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:30:42,703 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:30:42,767 - INFO - Migração de colunas concluída
+2026-08-23 10:30:42,777 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:30:42,778 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:30:42,779 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:30:43,413 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:30:43,429 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:30:43,512 - INFO - Migração de colunas concluída
+2026-08-23 10:30:43,520 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:30:43,524 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:30:43,525 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:31:04,646 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:31:04,666 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:31:04,729 - INFO - Migração de colunas concluída
+2026-08-23 10:31:04,745 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:31:04,747 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:31:04,748 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:31:09,839 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:31:09,849 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:31:09,899 - INFO - Migração de colunas concluída
+2026-08-23 10:31:09,912 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:31:09,913 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:31:09,913 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:31:11,439 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:31:11,448 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:31:11,528 - INFO - Migração de colunas concluída
+2026-08-23 10:31:11,540 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:31:11,541 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:31:11,545 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:32:48,995 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:32:49,170 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:32:49,512 - INFO - Migração de colunas concluída
+2026-08-23 10:32:49,550 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:32:49,553 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:32:49,577 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:34:16,624 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:34:16,639 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:34:16,702 - INFO - Migração de colunas concluída
+2026-08-23 10:34:16,711 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:34:16,715 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:34:16,716 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:36:46,290 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:36:46,308 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:36:46,382 - INFO - Migração de colunas concluída
+2026-08-23 10:36:46,395 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:36:46,397 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:36:46,398 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:43:19,225 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:43:19,237 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:43:19,331 - INFO - Migração de colunas concluída
+2026-08-23 10:43:19,337 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:43:19,337 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:43:19,337 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:43:45,080 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:43:45,087 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:43:45,144 - INFO - Migração de colunas concluída
+2026-08-23 10:43:45,156 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:43:45,157 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:43:45,158 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:43:45,587 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:43:45,596 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:43:45,649 - INFO - Migração de colunas concluída
+2026-08-23 10:43:45,661 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:43:45,663 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:43:45,665 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:44:00,128 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:44:00,134 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:44:00,294 - INFO - Migração de colunas concluída
+2026-08-23 10:44:00,362 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:44:00,364 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:44:00,423 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:44:13,138 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:44:13,142 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:44:13,204 - INFO - Migração de colunas concluída
+2026-08-23 10:44:13,217 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:44:13,221 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:44:13,222 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:44:20,852 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:44:20,863 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:44:20,974 - INFO - Migração de colunas concluída
+2026-08-23 10:44:20,994 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:44:20,995 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:44:21,004 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:44:51,199 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:44:51,204 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:44:51,246 - INFO - Migração de colunas concluída
+2026-08-23 10:44:51,258 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:44:51,258 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:44:51,259 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:46:16,256 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:46:16,268 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:46:16,336 - INFO - Migração de colunas concluída
+2026-08-23 10:46:16,355 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:46:16,357 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:46:16,358 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:49:55,594 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:49:55,606 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:49:55,639 - INFO - Migração de colunas concluída
+2026-08-23 10:49:55,648 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:49:55,649 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:49:55,651 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:50:27,314 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:50:27,322 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:50:27,371 - INFO - Migração de colunas concluída
+2026-08-23 10:50:27,378 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:50:27,379 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:50:27,380 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:50:40,803 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:50:40,812 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:50:40,913 - INFO - Migração de colunas concluída
+2026-08-23 10:50:40,922 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:50:40,923 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:50:40,924 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:51:20,692 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:51:20,698 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:51:20,786 - INFO - Migração de colunas concluída
+2026-08-23 10:51:20,825 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:51:20,825 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:51:20,826 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:51:33,865 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:51:33,874 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:51:33,963 - INFO - Migração de colunas concluída
+2026-08-23 10:51:33,970 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:51:33,971 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:51:33,972 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:51:37,710 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:51:37,718 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:51:38,144 - INFO - Migração de colunas concluída
+2026-08-23 10:51:38,189 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:51:38,190 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:51:38,191 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:52:08,177 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:52:08,186 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:52:08,235 - INFO - Migração de colunas concluída
+2026-08-23 10:52:08,243 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:52:08,245 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:52:08,248 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:52:29,949 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:52:29,958 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:52:30,014 - INFO - Migração de colunas concluída
+2026-08-23 10:52:30,027 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:52:30,028 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:52:30,028 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:52:50,152 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:52:50,165 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:52:50,210 - INFO - Migração de colunas concluída
+2026-08-23 10:52:50,217 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:52:50,218 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:52:50,219 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:52:56,777 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:52:56,787 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:52:56,845 - INFO - Migração de colunas concluída
+2026-08-23 10:52:56,855 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:52:56,856 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:52:56,857 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:54:52,989 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:54:52,998 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:54:53,044 - INFO - Migração de colunas concluída
+2026-08-23 10:54:53,053 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:54:53,053 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:54:53,054 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:54:53,948 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:54:53,953 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:54:53,995 - INFO - Migração de colunas concluída
+2026-08-23 10:54:54,007 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:54:54,010 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:54:54,010 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:55:05,052 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:55:05,061 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:55:05,115 - INFO - Migração de colunas concluída
+2026-08-23 10:55:05,125 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:55:05,126 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:55:05,127 - INFO - Aplicação iniciada com sucesso
+2026-08-23 10:55:16,214 - INFO - Iniciando inicialização da base de dados...
+2026-08-23 10:55:16,225 - INFO - Tabelas criadas com sucesso
+2026-08-23 10:55:16,276 - INFO - Migração de colunas concluída
+2026-08-23 10:55:16,289 - INFO - Dados iniciais criados com sucesso
+2026-08-23 10:55:16,290 - INFO - Base de dados já está na versão mais recente
+2026-08-23 10:55:16,291 - INFO - Aplicação iniciada com sucesso
