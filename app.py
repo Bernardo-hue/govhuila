@@ -6,11 +6,9 @@ import base64
 from datetime import datetime
 from pathlib import Path
 from contextlib import contextmanager
-from typing import Optional, Dict, List, Tuple, Any
+from typing import Optional, Dict, List, Tuple
 import pandas as pd
 import streamlit as st
-from PIL import Image
-import io
 
 # ============================================================
 # CONFIGURACAO DE LOGGING
@@ -35,108 +33,115 @@ BASE_DIR = Path(__file__).resolve().parent
 DB_PATH = Path(os.getenv("DB_PATH", str(BASE_DIR / "database.db")))
 UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", str(BASE_DIR / "uploads")))
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+LOGO_PATH = BASE_DIR / "OIP.webp"
 
 # ============================================================
 # 👉 VIDEO DE FUNDO
 # ============================================================
-BACKGROUND_VIDEO = 'Provincial_Government_of_Huila_b…_202608231007.mp4'
+BACKGROUND_VIDEO = BASE_DIR / 'Provincial_Government_of_Huila_b…_202608231007.mp4'
 
 # ============================================================
 # CONFIGURACAO STREAMLIT
 # ============================================================
 st.set_page_config(
     page_title=APP_TITLE,
-    page_icon="🏛️",
+    page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else ":material/account_balance:",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+if LOGO_PATH.exists():
+    st.logo(str(LOGO_PATH), size="large", icon_image=str(LOGO_PATH))
 
 # ============================================================
 # FUNÇÃO PARA CARREGAR VIDEO DE FUNDO
 # ============================================================
 
-def get_background_video_css(video_path: str = None) -> str:
-    """Gera o CSS para o vídeo de fundo."""
-    
+def get_background_video_css(video_path: Path | str | None = None) -> str:
+    """Gera o CSS do vídeo de fundo sem o carregar duas vezes."""
     if video_path and Path(video_path).exists():
-        try:
-            with open(video_path, "rb") as f:
-                video_data = f.read()
-            video_base64 = base64.b64encode(video_data).decode()
-            return f"""
-                /* ===== VIDEO DE FUNDO ===== */
-                .video-background {{
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    z-index: -1;
-                    width: 100vw;
-                    height: 100vh;
-                    object-fit: cover;
-                    pointer-events: none;
-                }}
-                
-                /* Overlay escuro sobre o vídeo */
-                .video-overlay {{
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    right: 0;
-                    bottom: 0;
-                    z-index: 0;
-                    background: rgba(0, 0, 0, 0.55);
-                    pointer-events: none;
-                }}
-            """
-        except Exception as e:
-            logger.error(f"Erro ao carregar vídeo de fundo: {e}")
-            return """
-                .stApp {
-                    background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 20, 40, 0.90) 100%);
-                }
-            """
-    else:
-        logger.warning(f"Vídeo não encontrado: {video_path}")
         return """
-            .stApp {
-                background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 20, 40, 0.90) 100%);
+            .video-background {
+                position: fixed;
+                inset: 0;
+                z-index: -1;
+                width: 100vw;
+                height: 100vh;
+                object-fit: cover;
+                pointer-events: none;
+            }
+            .video-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 0;
+                pointer-events: none;
             }
         """
 
+    logger.warning(f"Vídeo não encontrado: {video_path}")
+    return """
+        .stApp {
+            background: linear-gradient(135deg, #111111 0%, #450814 100%);
+        }
+    """
+
+
+@st.cache_data(show_spinner=False)
+def get_video_base64(video_path: str, modified_at: float) -> str:
+    """Codifica o vídeo uma vez por versão do ficheiro."""
+    del modified_at
+    with open(video_path, "rb") as video_file:
+        return base64.b64encode(video_file.read()).decode("ascii")
+
 # ============================================================
-# ESTILOS CSS
+# ESTILOS CSS - DESIGN GOVERNAMENTAL PROFISSIONAL
 # ============================================================
 
 def inject_custom_css():
-    """Injeta estilos CSS personalizados"""
+    """Injeta estilos CSS personalizados com design profissional"""
     
     background_css = get_background_video_css(BACKGROUND_VIDEO)
     
     # Verificar se o vídeo existe
-    video_exists = Path(BACKGROUND_VIDEO).exists()
+    video_path = Path(BACKGROUND_VIDEO)
+    video_exists = video_path.exists()
     video_base64 = ""
     if video_exists:
         try:
-            with open(BACKGROUND_VIDEO, "rb") as f:
-                video_base64 = base64.b64encode(f.read()).decode()
+            video_base64 = get_video_base64(
+                str(video_path), video_path.stat().st_mtime
+            )
         except Exception as e:
             logger.error(f"Erro ao ler vídeo: {e}")
     
     st.markdown(f"""
         <style>
-        /* ===== VIDEO DE FUNDO ===== */
+        :root {{
+            --azul-profundo: #111111;
+            --azul-principal: #C8102E;
+            --azul-claro: #E51B23;
+            --dourado: #F7C600;
+            --branco-puro: #FFFFFF;
+            --cinza-claro: #F8FAFC;
+            --cinza-medio: #E2E8F0;
+            --texto-escuro: #1A202C;
+            --texto-secundario: #4A5568;
+            --sombra-leve: 0 2px 8px rgba(11, 45, 71, 0.08);
+            --sombra-media: 0 8px 24px rgba(11, 45, 71, 0.12);
+            --sombra-forte: 0 16px 48px rgba(11, 45, 71, 0.16);
+        }}
+
+        /* ===== VIDEO DE FUNDO - MUITO VISÍVEL ===== */
         {background_css}
         
-        /* ===== REMOVER FUNDO BRANCO DO CONTAINER PRINCIPAL ===== */
+        /* Remover fundo branco do container principal */
         .main .block-container {{
-            padding: 0.5rem 1.5rem;
+            padding: 1.5rem 2rem;
             background: transparent !important;
             border-radius: 0px;
             margin: 0 auto;
             box-shadow: none;
-            max-width: 1200px;
+            max-width: 1320px;
             position: relative;
             z-index: 1;
         }}
@@ -146,376 +151,555 @@ def inject_custom_css():
             background: transparent !important;
         }}
         
-        /* ===== SIDEBAR ===== */
+        /* ===== OVERLAY DO VIDEO - LEVE E DISCRETO ===== */
+        .video-overlay {{
+            background: linear-gradient(
+                135deg, 
+                rgba(17, 17, 17, 0.45), 
+                rgba(110, 8, 30, 0.28)
+            ), 
+            rgba(0, 0, 0, 0.16);
+            backdrop-filter: blur(2px);
+        }}
+        
+        /* ===== SIDEBAR - REFINADA ===== */
         section[data-testid="stSidebar"] {{
-            background: linear-gradient(180deg, rgba(10, 22, 40, 0.92) 0%, rgba(26, 42, 74, 0.92) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: linear-gradient(
+                180deg, 
+                rgba(17, 17, 17, 0.93) 0%, 
+                rgba(93, 7, 27, 0.93) 100%
+            );
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             padding: 1.5rem 1rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(212, 165, 116, 0.25);
             position: relative;
             z-index: 2;
         }}
+        
         section[data-testid="stSidebar"] * {{
-            color: #e8edf3 !important;
+            color: #E8F1F8 !important;
         }}
+        
         section[data-testid="stSidebar"] .stButton > button {{
-            background: linear-gradient(135deg, rgba(74, 122, 170, 0.8), rgba(44, 74, 110, 0.8));
+            background: linear-gradient(
+                135deg, 
+                rgba(200, 16, 46, 0.92), 
+                rgba(17, 17, 17, 0.92)
+            );
             color: white !important;
-            border: 1px solid rgba(90, 138, 186, 0.3);
-            border-radius: 8px;
+            border: 1px solid rgba(212, 165, 116, 0.3);
+            border-radius: 10px;
             font-weight: 500;
+            padding: 0.6rem 1rem;
             backdrop-filter: blur(4px);
-        }}
-        section[data-testid="stSidebar"] .stButton > button:hover {{
-            background: linear-gradient(135deg, rgba(90, 138, 186, 0.9), rgba(58, 90, 126, 0.9));
-            border-color: rgba(106, 154, 202, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }}
-        
-        /* ===== TÍTULOS ===== */
-        h1 {{
-            color: #1a2940 !important;
-            font-weight: 700 !important;
-            border-bottom: 3px solid #2c4a6e;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1.5rem !important;
-        }}
-        h2, h3, h4 {{
-            color: #1a2940 !important;
-            font-weight: 600 !important;
-        }}
-        
-        /* ===== MÉTRICAS ===== */
-        div[data-testid="stMetric"] {{
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 12px;
-            padding: 1.25rem 1rem;
-            border-left: 4px solid #2c4a6e;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             transition: all 0.3s ease;
         }}
-        div[data-testid="stMetric"]:hover {{
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(44, 74, 110, 0.15);
+        
+        section[data-testid="stSidebar"] .stButton > button:hover {{
+            background: linear-gradient(
+                135deg, 
+                rgba(229, 27, 35, 0.98), 
+                rgba(17, 17, 17, 0.98)
+            );
+            border-color: rgba(212, 165, 116, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }}
+        
+        section[data-testid="stSidebar"] [data-baseweb="radio"] label {{
+            border-radius: 8px;
+            padding: 0.4rem 0.6rem;
+            transition: all 0.2s ease;
+        }}
+        
+        section[data-testid="stSidebar"] [data-baseweb="radio"] label:hover {{
+            background: rgba(212, 165, 116, 0.15);
+        }}
+        
+        /* ===== TÍTULOS - ELEGANTES ===== */
+        h1 {{
+            color: var(--texto-escuro) !important;
+            font-weight: 700 !important;
+            font-size: 2rem !important;
+            border-bottom: 3px solid var(--dourado);
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.5rem !important;
+            letter-spacing: -0.02em;
+        }}
+        
+        h2 {{
+            color: var(--texto-escuro) !important;
+            font-weight: 600 !important;
+            font-size: 1.5rem !important;
+            margin-top: 1.5rem !important;
+            margin-bottom: 0.75rem !important;
+        }}
+        
+        h3, h4 {{
+            color: var(--texto-escuro) !important;
+            font-weight: 600 !important;
+        }}
+        
+        /* ===== CAPTIONS E SUBTÍTULOS ===== */
+        .stCaption, [data-testid="stCaptionContainer"] {{
+            color: var(--texto-secundario) !important;
+            font-size: 0.95rem !important;
+            line-height: 1.6;
+        }}
+        
+        /* ===== MÉTRICAS - MODERNAS ===== */
+        div[data-testid="stMetric"] {{
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 14px;
+            padding: 1.5rem 1.25rem;
+            border-left: 5px solid var(--dourado);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            box-shadow: var(--sombra-media);
+            transition: all 0.3s ease;
+        }}
+        
+        div[data-testid="stMetric"]:hover {{
+            transform: translateY(-6px);
+            box-shadow: var(--sombra-forte);
+            border-color: rgba(212, 165, 116, 0.4);
+        }}
+        
         div[data-testid="stMetric"] label {{
             font-weight: 600 !important;
-            color: #2c4a6e !important;
+            color: var(--texto-secundario) !important;
             font-size: 0.9rem !important;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }}
-        div[data-testid="stMetric"] .stMetricValue {{
-            color: #1a2940 !important;
+        
+        div[data-testid="stMetric"] [data-testid="stMetricValue"] {{
+            color: var(--azul-profundo) !important;
             font-weight: 700 !important;
+            font-size: 2rem !important;
         }}
         
         /* ===== BOTÕES ===== */
         .stButton > button {{
-            background: linear-gradient(135deg, #2c4a6e, #1a2940);
-            color: white;
+            background: linear-gradient(
+                135deg, 
+                var(--azul-principal), 
+                var(--azul-profundo)
+            );
+            color: white !important;
             border: none;
-            border-radius: 8px;
-            padding: 0.6rem 1.5rem;
-            font-weight: 500;
+            border-radius: 10px;
+            padding: 0.7rem 1.5rem;
+            font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(44, 74, 110, 0.2);
+            box-shadow: var(--sombra-media);
         }}
+        
         .stButton > button:hover {{
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(44, 74, 110, 0.3);
-            background: linear-gradient(135deg, #3a5a7e, #2a3a5e);
+            box-shadow: var(--sombra-forte);
+            background: linear-gradient(
+                135deg, 
+                var(--azul-claro), 
+                var(--azul-principal)
+            );
         }}
         
         /* ===== FORMULÁRIOS ===== */
         div[data-testid="stForm"] {{
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 12px;
-            padding: 1.75rem;
-            border: 1px solid rgba(232, 237, 243, 0.3);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        }}
-        div[data-testid="stAlert"] {{
-            border-radius: 10px;
-            border-left: 4px solid #2c4a6e;
-        }}
-        .stDataFrame {{
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(232, 237, 243, 0.3);
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 14px;
+            padding: 2rem;
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            box-shadow: var(--sombra-media);
         }}
         
-        /* ===== LOGIN BOX - PEQUENA E ELEGANTE ===== */
+        /* ===== CAMPOS DE INSERÇÃO ===== */
+        [data-testid="stWidgetLabel"] p,
+        .stTextInput label,
+        .stTextArea label,
+        .stSelectbox label,
+        .stDateInput label,
+        .stFileUploader label {{
+            color: var(--texto-escuro) !important;
+            font-size: 0.88rem !important;
+            font-weight: 650 !important;
+            letter-spacing: 0.01em;
+            margin-bottom: 0.38rem !important;
+        }}
+
+        .stTextInput div[data-baseweb="input"] > div,
+        .stNumberInput div[data-baseweb="input"] > div,
+        .stDateInput div[data-baseweb="input"] > div,
+        .stSelectbox div[data-baseweb="select"] > div,
+        .stMultiSelect div[data-baseweb="select"] > div {{
+            min-height: 46px !important;
+            border-radius: 10px !important;
+            border: 1px solid #CBD5E1 !important;
+            background: #FFFFFF !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+            transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease !important;
+        }}
+
+        .stTextArea textarea {{
+            min-height: 118px !important;
+            padding: 0.78rem 0.9rem !important;
+            border-radius: 10px !important;
+            border: 1px solid #CBD5E1 !important;
+            background: #FFFFFF !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+            resize: vertical !important;
+            transition: border-color 160ms ease, box-shadow 160ms ease !important;
+        }}
+
+        .stTextInput input,
+        .stNumberInput input,
+        .stDateInput input,
+        .stSelectbox input,
+        .stMultiSelect input,
+        .stTextArea textarea {{
+            color: var(--texto-escuro) !important;
+            font-size: 0.96rem !important;
+            line-height: 1.45 !important;
+        }}
+
+        .stTextInput input::placeholder,
+        .stNumberInput input::placeholder,
+        .stDateInput input::placeholder,
+        .stTextArea textarea::placeholder {{
+            color: #718096 !important;
+            opacity: 1 !important;
+        }}
+
+        .stTextInput div[data-baseweb="input"] > div:hover,
+        .stNumberInput div[data-baseweb="input"] > div:hover,
+        .stDateInput div[data-baseweb="input"] > div:hover,
+        .stSelectbox div[data-baseweb="select"] > div:hover,
+        .stMultiSelect div[data-baseweb="select"] > div:hover,
+        .stTextArea textarea:hover {{
+            border-color: #9CB7CC !important;
+        }}
+
+        .stTextInput div[data-baseweb="input"] > div:focus-within,
+        .stNumberInput div[data-baseweb="input"] > div:focus-within,
+        .stDateInput div[data-baseweb="input"] > div:focus-within,
+        .stSelectbox div[data-baseweb="select"] > div:focus-within,
+        .stMultiSelect div[data-baseweb="select"] > div:focus-within,
+        .stTextArea textarea:focus {{
+            border-color: var(--azul-principal) !important;
+            box-shadow: 0 0 0 4px rgba(200, 16, 46, 0.14), 0 2px 5px rgba(15, 23, 42, 0.08) !important;
+            outline: none !important;
+        }}
+
+        .stSelectbox svg,
+        .stMultiSelect svg,
+        .stDateInput svg,
+        .stNumberInput svg {{
+            color: var(--azul-principal) !important;
+            fill: currentColor !important;
+        }}
+
+        .stMultiSelect span[data-baseweb="tag"] {{
+            background: #FFF2D1 !important;
+            color: #5C4300 !important;
+            border-radius: 6px !important;
+            font-weight: 600 !important;
+        }}
+
+        [data-testid="stFileUploaderDropzone"] {{
+            min-height: 142px !important;
+            padding: 1.15rem !important;
+            background: linear-gradient(135deg, #FFFBF3 0%, #FFF4D6 100%) !important;
+            border: 1.5px dashed #D6A900 !important;
+            border-radius: 12px !important;
+            transition: border-color 160ms ease, box-shadow 160ms ease !important;
+        }}
+
+        [data-testid="stFileUploaderDropzone"]:hover {{
+            border-color: var(--azul-principal) !important;
+            box-shadow: 0 0 0 4px rgba(200, 16, 46, 0.10) !important;
+        }}
+        
+        /* ===== ALERTS ===== */
+        div[data-testid="stAlert"] {{
+            border-radius: 12px;
+            border-left: 4px solid var(--azul-principal);
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.94);
+            box-shadow: var(--sombra-leve);
+        }}
+        
+        /* ===== DATAFRAMES ===== */
+        .stDataFrame {{
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 165, 116, 0.15);
+            box-shadow: var(--sombra-leve);
+        }}
+        
+        /* ===== LOGIN BOX - ELEGANTE E COMPACTO ===== */
         .login-wrapper {{
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 92vh;
-            padding: 0.5rem;
+            padding: 1rem;
             position: relative;
             z-index: 10;
         }}
+        
         .login-box {{
-            max-width: 300px;
+            max-width: 380px;
             width: 100%;
-            padding: 1.8rem 1.8rem 1.8rem 1.8rem;
-            background: rgba(10, 22, 40, 0.80);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 2.2rem 2rem;
+            background: rgba(17, 17, 17, 0.90);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(212, 165, 116, 0.3);
             transition: all 0.3s ease;
         }}
+        
         .login-box:hover {{
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border-color: rgba(212, 165, 116, 0.5);
         }}
         
         .login-box h1 {{
             text-align: center;
-            color: #ffffff !important;
+            color: #FFFFFF !important;
             border-bottom: none !important;
-            margin-bottom: 0.1rem !important;
-            font-size: 1.15rem !important;
-            font-weight: 600 !important;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            margin-bottom: 0.25rem !important;
+            font-size: 1.4rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.3px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }}
+        
         .login-box .subtitle {{
             text-align: center;
-            color: rgba(138, 180, 214, 0.85);
-            margin-bottom: 1.5rem;
-            font-size: 0.7rem;
-            letter-spacing: 1px;
-            font-weight: 300;
+            color: rgba(212, 165, 116, 0.8);
+            margin-bottom: 1.8rem;
+            font-size: 0.8rem;
+            letter-spacing: 1.2px;
+            font-weight: 400;
             text-transform: uppercase;
         }}
         
-        /* Campos do formulário de login - MAIS COMPACTOS */
+        /* Campos do formulário de login */
         .login-box .stTextInput {{
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.8rem;
         }}
+        
         .login-box .stTextInput > div > div > input {{
-            background-color: rgba(255, 255, 255, 0.90) !important;
-            border-radius: 8px !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #1a2940 !important;
-            padding: 0.4rem 0.8rem !important;
-            font-size: 0.8rem !important;
-            height: 34px !important;
+            background-color: rgba(255, 255, 255, 0.93) !important;
+            border-radius: 10px !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: var(--texto-escuro) !important;
+            padding: 0.5rem 1rem !important;
+            font-size: 0.95rem !important;
+            height: 40px !important;
             transition: all 0.3s ease !important;
         }}
+        
         .login-box .stTextInput > div > div > input:focus {{
-            border-color: rgba(74, 154, 218, 0.6) !important;
-            box-shadow: 0 0 0 3px rgba(74, 154, 218, 0.12) !important;
-            background-color: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(212, 165, 116, 0.6) !important;
+            box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15) !important;
+            background-color: rgba(255, 255, 255, 0.98) !important;
         }}
+        
         .login-box .stTextInput > div > div > input::placeholder {{
-            color: #8a9aaa !important;
-            font-size: 0.75rem !important;
+            color: #9CA3AF !important;
+            font-size: 0.9rem !important;
         }}
+        
         .login-box .stTextInput label {{
-            color: rgba(200, 216, 232, 0.7) !important;
-            font-size: 0.7rem !important;
-            font-weight: 400 !important;
-            margin-bottom: 0.05rem !important;
             display: none !important;
         }}
         
-        /* Botão de login - MAIS COMPACTO */
-        .login-box .stButton {{
-            margin-top: 0.3rem;
-        }}
+        /* Botão de login */
         .login-box .stButton > button {{
-            background: linear-gradient(135deg, #4a9ada, #2c6aaa) !important;
+            background: linear-gradient(
+                135deg, 
+                var(--azul-principal), 
+                var(--azul-profundo)
+            ) !important;
             color: white !important;
             border: none !important;
-            border-radius: 8px !important;
-            font-weight: 600 !important;
-            padding: 0.4rem 1rem !important;
+            border-radius: 10px !important;
+            font-weight: 700 !important;
+            padding: 0.6rem 1rem !important;
             width: 100% !important;
-            font-size: 0.82rem !important;
+            font-size: 0.95rem !important;
             letter-spacing: 0.3px;
             transition: all 0.3s ease !important;
-            box-shadow: 0 4px 16px rgba(44, 106, 170, 0.2) !important;
-            height: 36px !important;
+            box-shadow: 0 6px 20px rgba(27, 94, 145, 0.25) !important;
+            height: 40px !important;
+            margin-top: 0.5rem !important;
         }}
+        
         .login-box .stButton > button:hover {{
-            background: linear-gradient(135deg, #5aaaea, #3c7aba) !important;
+            background: linear-gradient(
+                135deg, 
+                var(--azul-claro), 
+                var(--azul-principal)
+            ) !important;
             transform: translateY(-2px) !important;
-            box-shadow: 0 6px 24px rgba(44, 106, 170, 0.3) !important;
-        }}
-        
-        /* Mensagens de erro no login - COMPACTAS */
-        .login-box .stAlert {{
-            background: rgba(255, 50, 50, 0.08) !important;
-            border: 1px solid rgba(255, 50, 50, 0.1) !important;
-            border-radius: 6px !important;
-            padding: 0.25rem 0.6rem !important;
-            font-size: 0.7rem !important;
-            margin-top: 0.2rem !important;
-        }}
-        .login-box .stAlert .st-emotion-cache-1gv3huu {{
-            color: #ff6b6b !important;
-        }}
-        
-        /* Divider com texto "Demo" - COMPACTO */
-        .login-box .demo-divider {{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            margin-top: 0.8rem;
-            padding: 0.3rem 0.6rem;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }}
-        .login-box .demo-divider .demo-icon {{
-            font-size: 0.6rem;
-            opacity: 0.5;
-        }}
-        .login-box .demo-divider .demo-text {{
-            color: rgba(138, 180, 214, 0.6);
-            font-size: 0.6rem;
-            font-weight: 300;
-            letter-spacing: 0.3px;
-        }}
-        .login-box .demo-divider .demo-credentials {{
-            color: rgba(168, 200, 232, 0.85);
-            font-size: 0.6rem;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.06);
-            padding: 0.05rem 0.5rem;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
+            box-shadow: 0 8px 28px rgba(27, 94, 145, 0.35) !important;
         }}
         
         /* ===== CONTEÚDO DAS PÁGINAS ===== */
         .page-content {{
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-radius: 16px;
-            padding: 1.5rem 2rem;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            box-shadow: var(--sombra-media);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            margin-top: 1rem;
         }}
         
         /* ===== EXPANDER ===== */
         .streamlit-expanderHeader {{
-            background: rgba(248, 250, 252, 0.9);
+            background: rgba(248, 250, 252, 0.92);
             border-radius: 10px;
-            font-weight: 500;
-            border: 1px solid rgba(232, 237, 243, 0.3);
+            font-weight: 600;
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            transition: all 0.2s ease;
         }}
         
-        /* ===== FOOTER ===== */
-        .footer {{
-            text-align: center;
-            padding: 1.5rem 0 0.5rem 0;
-            color: rgba(122, 138, 154, 0.8);
-            font-size: 0.8rem;
-            border-top: 1px solid rgba(232, 237, 243, 0.2);
-            margin-top: 2.5rem;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 0 0 12px 12px;
-            backdrop-filter: blur(4px);
-        }}
-        
-        /* ===== CARDS ===== */
-        .info-card {{
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(4px);
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid rgba(232, 237, 243, 0.3);
-            height: 100%;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }}
-        .info-card:hover {{
-            box-shadow: 0 8px 30px rgba(44, 74, 110, 0.1);
-            transform: translateY(-4px);
-            border-color: rgba(44, 74, 110, 0.3);
-        }}
-        .info-card h4 {{
-            color: #1a2940;
-            margin-top: 0;
-            margin-bottom: 0.5rem;
-        }}
-        .info-card p {{
-            color: #5a6a7a;
-            line-height: 1.6;
-            margin: 0;
-            font-size: 0.9rem;
+        .streamlit-expanderHeader:hover {{
+            background: rgba(248, 250, 252, 0.98);
+            border-color: rgba(212, 165, 116, 0.3);
         }}
         
         /* ===== TABS ===== */
         .stTabs [data-baseweb="tab-list"] {{
             gap: 0.5rem;
+            border-bottom: 2px solid rgba(212, 165, 116, 0.2);
         }}
+        
         .stTabs [data-baseweb="tab"] {{
             border-radius: 8px;
-            padding: 0.5rem 1.25rem;
-            font-weight: 500;
-            background: rgba(248, 250, 252, 0.8);
-            border: 1px solid rgba(232, 237, 243, 0.3);
+            padding: 0.6rem 1.5rem;
+            font-weight: 600;
+            background: transparent;
+            border: none;
+            color: var(--texto-secundario) !important;
+            transition: all 0.2s ease;
         }}
+        
         .stTabs [aria-selected="true"] {{
-            background: linear-gradient(135deg, #2c4a6e, #1a2940);
-            color: white !important;
-            border-color: #2c4a6e;
+            color: var(--azul-principal) !important;
+            border-bottom: 3px solid var(--dourado);
+            background: rgba(212, 165, 116, 0.08);
+        }}
+        
+        /* ===== CARDS INFORMATIVOS ===== */
+        .info-card {{
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            border-radius: 14px;
+            padding: 1.75rem;
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            height: 100%;
+            transition: all 0.3s ease;
+            box-shadow: var(--sombra-leve);
+        }}
+        
+        .info-card:hover {{
+            box-shadow: var(--sombra-media);
+            transform: translateY(-4px);
+            border-color: rgba(212, 165, 116, 0.4);
+        }}
+        
+        .info-card h4 {{
+            color: var(--azul-principal);
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }}
+        
+        .info-card p {{
+            color: var(--texto-secundario);
+            line-height: 1.7;
+            margin: 0;
+            font-size: 0.95rem;
         }}
         
         /* ===== SIDEBAR USER INFO ===== */
         .sidebar-user {{
-            background: rgba(255,255,255,0.06);
-            padding: 0.75rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(255,255,255,0.04);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(212, 165, 116, 0.2);
         }}
+        
         .sidebar-user .user-name {{
-            color: white;
-            font-weight: 500;
-            font-size: 0.9rem;
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 0.95rem;
         }}
+        
         .sidebar-user .user-role {{
-            color: rgba(168, 200, 232, 0.8);
-            font-size: 0.7rem;
+            color: rgba(212, 165, 116, 0.85);
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
         }}
+        
         .sidebar-user .user-label {{
-            color: rgba(168, 200, 232, 0.6);
+            color: rgba(212, 165, 116, 0.6);
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.6px;
+            margin-bottom: 0.3rem;
+        }}
+        
+        /* ===== FOOTER ===== */
+        .footer {{
+            text-align: center;
+            padding: 2rem 0 1rem;
+            color: var(--texto-secundario);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(212, 165, 116, 0.15);
+            margin-top: 3rem;
+            background: transparent;
         }}
         
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {{
-            width: 6px;
-            height: 6px;
+            width: 8px;
+            height: 8px;
         }}
+        
         ::-webkit-scrollbar-track {{
-            background: rgba(0,0,0,0.05);
+            background: rgba(212, 165, 116, 0.08);
             border-radius: 10px;
         }}
+        
         ::-webkit-scrollbar-thumb {{
-            background: rgba(44, 74, 110, 0.3);
+            background: rgba(27, 94, 145, 0.4);
             border-radius: 10px;
         }}
+        
         ::-webkit-scrollbar-thumb:hover {{
-            background: rgba(44, 74, 110, 0.5);
+            background: rgba(27, 94, 145, 0.6);
         }}
         </style>
     """, unsafe_allow_html=True)
     
     # Injetar o elemento de vídeo HTML e overlay
+    video_path = Path(BACKGROUND_VIDEO)
+    video_exists = video_path.exists()
     if video_exists and video_base64:
         st.markdown(f"""
             <div class="video-overlay"></div>
@@ -577,13 +761,6 @@ class DatabaseManager:
             conn.commit()
             return cursor.lastrowid
     
-    def execute_update(self, query: str, params: tuple = ()) -> int:
-        with self.get_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute(query, params)
-            conn.commit()
-            return cursor.rowcount
-    
     def table_exists(self, table_name: str) -> bool:
         with self.get_connection() as conn:
             cursor = conn.cursor()
@@ -592,6 +769,14 @@ class DatabaseManager:
                 WHERE type='table' AND name=?
             """, (table_name,))
             return cursor.fetchone() is not None
+
+    def execute_update(self, query: str, params: tuple = ()) -> int:
+        with self.get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(query, params)
+            conn.commit()
+            row_count = cursor.rowcount
+            return int(row_count) if row_count is not None else 0
     
     def column_exists(self, table_name: str, column_name: str) -> bool:
         with self.get_connection() as conn:
@@ -885,9 +1070,12 @@ def authenticate(username: str, password: str) -> Optional[Dict]:
         logger.error(f"Erro na autenticação: {e}")
         return None
 
-def log_action(username: str, action: str, module: str = None, record_id: str = None, details: str = None):
+def log_action(username: str, action: str, module: Optional[str] = None, record_id: Optional[str] = None, details: Optional[str] = None):
     try:
-        details_text = f"Modulo: {module} | ID: {record_id} | {details}" if module or record_id else details or action
+        if module or record_id:
+            details_text = f"Modulo: {module} | ID: {record_id} | {details or ''}".strip(" |")
+        else:
+            details_text = details or action
         db.execute_insert("""
             INSERT INTO audit_log (username, action, created_at, details)
             VALUES (?, ?, ?, ?)
@@ -1007,76 +1195,65 @@ def init_session():
     if "full_name" not in st.session_state:
         st.session_state.full_name = ""
 
-init_session()
 
 def rerun_app():
     try:
         st.rerun()
     except AttributeError:
-        try:
-            st.experimental_rerun()
-        except AttributeError:
-            pass
+        st.experimental_rerun()
 
 # ============================================================
-# TELA DE LOGIN - SEM ÍCONE
+# TELA DE LOGIN
 # ============================================================
 
 def login_screen():
-    st.markdown("""
-        <div class="login-wrapper">
-            <div class="login-box">
-                <h1>Governo Provincial</h1>
-                <p class="subtitle">Sistema de Gestão Documental</p>
-    """, unsafe_allow_html=True)
-    
-    with st.form("login_form", clear_on_submit=False):
-        username = st.text_input(
-            "Utilizador", 
-            placeholder="Digite seu nome de utilizador",
-            label_visibility="collapsed"
-        )
-        
-        password = st.text_input(
-            "Palavra-passe", 
-            type="password", 
-            placeholder="Digite sua palavra-passe",
-            label_visibility="collapsed"
-        )
-        
-        st.markdown('<div style="height: 0.2rem;"></div>', unsafe_allow_html=True)
-        
-        submitted = st.form_submit_button("Iniciar Sessão", use_container_width=True)
-        
-        if submitted:
-            if not username.strip():
-                st.error("⚠️ Digite o utilizador.")
-            elif not password:
-                st.error("⚠️ Digite a palavra-passe.")
-            else:
-                user = authenticate(username, password)
-                if user:
-                    st.session_state.authenticated = True
-                    st.session_state.username = user["username"]
-                    st.session_state.role = user["role"]
-                    st.session_state.full_name = user["full_name"] or user["username"]
-                    log_action(user["username"], "Login", "Sistema")
-                    rerun_app()
-                else:
-                    st.error("❌ Utilizador ou palavra-passe inválidos.")
-    
-    st.markdown("""
-        <div class="demo-divider">
-            <span class="demo-icon">🔑</span>
-            <span class="demo-text">Demo</span>
-            <span class="demo-credentials">admin / admin123</span>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown("""
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+    _, login_column, _ = st.columns([1, 1.2, 1])
+
+    with login_column:
+        with st.container(key="login-panel", border=False):
+            if LOGO_PATH.exists():
+                with st.container(horizontal_alignment="center"):
+                    st.image(str(LOGO_PATH), width=132)
+            st.title("Governo Provincial", text_alignment="center")
+            st.caption(
+                "Sistema de Gestão Documental",
+                text_alignment="center"
+            )
+
+            with st.form("login_form", clear_on_submit=False):
+                username = st.text_input(
+                    "Utilizador",
+                    placeholder="Digite o seu nome de utilizador",
+                    label_visibility="collapsed"
+                )
+
+                password = st.text_input(
+                    "Palavra-passe",
+                    type="password",
+                    placeholder="Digite a sua palavra-passe",
+                    label_visibility="collapsed"
+                )
+
+                submitted = st.form_submit_button("Iniciar sessão", type="primary", width="stretch")
+
+                if submitted:
+                    if not username.strip():
+                        st.error("⚠️ Digite o utilizador.")
+                    elif not password:
+                        st.error("⚠️ Digite a palavra-passe.")
+                    else:
+                        user = authenticate(username, password)
+                        if user:
+                            st.session_state.authenticated = True
+                            st.session_state.username = user["username"]
+                            st.session_state.role = user["role"]
+                            st.session_state.full_name = user["full_name"] or user["username"]
+                            log_action(user["username"], "Login", "Sistema")
+                            rerun_app()
+                        else:
+                            st.error("❌ Utilizador ou palavra-passe inválidos.")
+
+            st.caption("Demo: admin / admin123", text_alignment="center")
 
 # ============================================================
 # DASHBOARD
@@ -1088,17 +1265,16 @@ def page_dashboard():
     st.caption("Visão geral do sistema de gestão documental do Governo Provincial")
     
     doc_total, doc_cat, doc_status, doc_dept = get_document_stats()
-    proc_total, proc_pending, proc_status, proc_priority = get_process_stats()
-    
+    proc_total, proc_pending, proc_status, _ = get_process_stats()
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("📄 Documentos Digitalizados", f"{doc_total:,}")
+        st.metric("Documentos", f"{doc_total:,}")
     with col2:
-        st.metric("🔄 Processos em Tramitação", f"{proc_pending:,}")
+        st.metric("Processos Pendentes", f"{proc_pending:,}")
     with col3:
-        st.metric("🏢 Departamentos Ativos", f"{len(doc_dept)}")
+        st.metric("Departamentos", f"{len(doc_dept)}")
     with col4:
-        st.metric("📋 Total de Processos", f"{proc_total:,}")
+        st.metric("Total de Processos", f"{proc_total:,}")
     
     st.markdown("---")
     
@@ -1108,7 +1284,7 @@ def page_dashboard():
         st.subheader("Documentos por Categoria")
         if doc_cat:
             df_cat = pd.DataFrame(doc_cat)
-            st.dataframe(df_cat, hide_index=True, use_container_width=True)
+            st.dataframe(df_cat, hide_index=True, width="stretch")
         else:
             st.info("Nenhum documento categorizado.")
     
@@ -1116,26 +1292,26 @@ def page_dashboard():
         st.subheader("Processos por Status")
         if proc_status:
             df_status = pd.DataFrame(proc_status)
-            st.dataframe(df_status, hide_index=True, use_container_width=True)
+            st.dataframe(df_status, hide_index=True, width="stretch")
         else:
             st.info("Nenhum processo registado.")
     
     st.markdown("---")
     
-    st.subheader("Objectivos Estratégicos do Sistema")
+    st.subheader("Objectivos Estratégicos")
     
-    cols = st.columns(3)
     objetivos = [
-        ("📂 Digitalização", "Digitalizar, indexar e organizar o acervo documental do Governo Provincial, eliminando a dependência do arquivo físico."),
-        ("⚡ Tramitação Electrónica", "Permitir a tramitação electrónica de processos entre secretarias e municípios, garantindo agilidade e transparência."),
-        ("🔒 Segurança", "Garantir a autenticidade, a rastreabilidade e a segurança dos documentos oficiais através de registos de auditoria."),
-        ("📚 Capacitação", "Capacitar quadros técnicos e jovens aprendizes na gestão documental digital moderna e eficiente."),
-        ("🛡️ Redução de Riscos", "Reduzir o risco de perda de informação através de backups digitais e controlo de versões."),
-        ("⚖️ Conformidade", "Assegurar a conformidade com as normas legais e regulamentares de gestão documental.")
+        ("📂 Digitalização", "Digitalizar e organizar o acervo documental do Governo Provincial, eliminando a dependência do arquivo físico."),
+        ("⚡ Tramitação", "Permitir tramitação electrónica de processos entre secretarias com agilidade e transparência."),
+        ("🔒 Segurança", "Garantir autenticidade, rastreabilidade e segurança através de registos de auditoria."),
+        ("📚 Capacitação", "Capacitar quadros técnicos na gestão documental digital moderna."),
+        ("🛡️ Proteção", "Reduzir risco de perda de informação através de backups digitais."),
+        ("⚖️ Conformidade", "Assegurar conformidade com normas legais de gestão documental.")
     ]
     
-    for col, (titulo, desc) in zip(cols, objetivos[:3]):
-        with col:
+    cols = st.columns(3)
+    for idx, (titulo, desc) in enumerate(objetivos):
+        with cols[idx % 3]:
             st.markdown(f"""
                 <div class="info-card">
                     <h4>{titulo}</h4>
@@ -1143,15 +1319,6 @@ def page_dashboard():
                 </div>
             """, unsafe_allow_html=True)
     
-    cols = st.columns(3)
-    for col, (titulo, desc) in zip(cols, objetivos[3:]):
-        with col:
-            st.markdown(f"""
-                <div class="info-card">
-                    <h4>{titulo}</h4>
-                    <p>{desc}</p>
-                </div>
-            """, unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================
@@ -1161,46 +1328,46 @@ def page_dashboard():
 def page_digitalizar():
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
     st.title("Digitalizar Documentos")
-    st.caption("Digitalize, indexe e organize o acervo documental do Governo Provincial")
+    st.caption("Digitalize, indexe e organize o acervo documental")
     
-    tabs = st.tabs(["📤 Digitalizar", "📋 Documentos Recentes"])
+    tabs = st.tabs(["Digitalizar", "Documentos Recentes"])
     
     with tabs[0]:
         with st.form("document_form", clear_on_submit=True):
             col1, col2 = st.columns(2)
             
             with col1:
-                title = st.text_input("Título do Documento *", placeholder="Digite o título completo do documento")
-                doc_type = st.selectbox("Tipo de Documento", ["Ofício", "Despacho", "Processo", "Relatório", "Contrato", "Certidão", "Edital", "Outro"])
-                department = st.selectbox("Secretaria / Departamento *", 
+                title = st.text_input("Título do Documento *", placeholder="Digite o título completo")
+                doc_type = st.selectbox("Tipo", ["Ofício", "Despacho", "Processo", "Relatório", "Contrato", "Certidão", "Edital", "Outro"])
+                department = st.selectbox("Departamento *", 
                                         ["Gabinete do Governador", "Secretaria Geral", "Financas", "Planeamento", "Infraestruturas", "Educacao", "Saude"])
                 municipality = st.selectbox("Município", ["Luanda", "Benguela", "Huila", "Cabinda", "Namibe", "Outro"])
             
             with col2:
                 category = st.selectbox("Categoria", ["Administrativo", "Financeiro", "Juridico", "Tecnico", "Operacional", "Estrategico"])
-                subcategory = st.text_input("Subcategoria", placeholder="Ex: Licitações, Recursos Humanos, etc.")
+                subcategory = st.text_input("Subcategoria", placeholder="Ex: Recursos Humanos")
                 security_level = st.selectbox("Nível de Segurança", ["Publico", "Restrito", "Confidencial", "Secreto"])
-                archive_period = st.selectbox("Período de Arquivo", ["1 ano", "3 anos", "5 anos", "10 anos", "Permanente"])
+                archive_period = st.selectbox("Período", ["1 ano", "3 anos", "5 anos", "10 anos", "Permanente"])
             
             col3, col4 = st.columns(2)
             with col3:
-                uploaded = st.file_uploader("Ficheiro Digital", type=["pdf", "png", "jpg", "jpeg", "docx", "xlsx", "zip"])
-                description = st.text_area("Descrição", placeholder="Breve descrição do conteúdo do documento...")
+                uploaded = st.file_uploader("Ficheiro", type=["pdf", "png", "jpg", "jpeg", "docx", "xlsx", "zip"])
+                description = st.text_area("Descrição", placeholder="Descrição do conteúdo...")
             
             with col4:
-                keywords = st.text_input("Palavras-chave", placeholder="Separe por vírgulas")
-                document_number = st.text_input("Número do Documento (opcional)", placeholder="Deixe em branco para gerar automaticamente")
+                keywords = st.text_input("Palavras-chave", placeholder="Separadas por vírgulas")
+                document_number = st.text_input("Nº Documento", placeholder="Deixe em branco para gerar automaticamente")
             
-            submitted = st.form_submit_button("📤 Digitalizar e Registar", use_container_width=True)
+            submitted = st.form_submit_button("Digitalizar", type="primary", width="stretch")
             
             if submitted:
                 title = title.strip()
                 if not title:
-                    st.error("O título do documento é obrigatório.")
+                    st.error("O título é obrigatório.")
                     return
                 
                 if not department:
-                    st.error("Selecione o departamento/secretaria.")
+                    st.error("Selecione o departamento.")
                     return
                 
                 final_number = document_number.strip() if document_number.strip() else generate_document_number()
@@ -1230,7 +1397,7 @@ def page_digitalizar():
                 
                 existing = db.execute_single("SELECT id FROM documents WHERE document_number = ?", (final_number,))
                 if existing:
-                    st.error(f"O número do documento '{final_number}' já está em uso.")
+                    st.error(f"O número '{final_number}' já está em uso.")
                     return
                 
                 now = datetime.now().isoformat()
@@ -1248,8 +1415,8 @@ def page_digitalizar():
                     ))
                     
                     log_action(st.session_state.username, "Documento Digitalizado", "Documentos", final_number, 
-                              f"Título: {title} | Tipo: {doc_type} | Departamento: {department}")
-                    st.success(f"✅ Documento '{title}' digitalizado com sucesso! Número: {final_number}")
+                              f"Título: {title} | Tipo: {doc_type}")
+                    st.success(f"✅ Documento '{title}' digitalizado com sucesso!")
                     
                 except Exception as e:
                     st.error(f"Erro ao guardar documento: {str(e)}")
@@ -1257,7 +1424,7 @@ def page_digitalizar():
                     return
     
     with tabs[1]:
-        st.subheader("Documentos Recentemente Digitalizados")
+        st.subheader("Documentos Recentes")
         try:
             rows = db.execute_query("""
                 SELECT id, title, document_number, type, department, municipality, category, status, created_at
@@ -1268,7 +1435,7 @@ def page_digitalizar():
             
             if rows:
                 df = pd.DataFrame(rows)
-                st.dataframe(df, hide_index=True, use_container_width=True)
+                st.dataframe(df, hide_index=True, width="stretch")
             else:
                 st.info("Nenhum documento digitalizado ainda.")
         except Exception as e:
@@ -1283,13 +1450,13 @@ def page_digitalizar():
 def page_indexar():
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
     st.title("Indexar e Organizar")
-    st.caption("Pesquise, classifique e organize o acervo documental por diversos critérios")
+    st.caption("Pesquise e classifique o acervo documental")
     
-    with st.expander("🔍 Filtros de Pesquisa Avançada", expanded=True):
+    with st.expander("🔍 Filtros de Pesquisa", expanded=True):
         col1, col2, col3 = st.columns(3)
         
         with col1:
-            query = st.text_input("Pesquisa Geral", placeholder="Título, número, descrição...")
+            query = st.text_input("Pesquisa", placeholder="Título, número...")
             department = st.selectbox("Departamento", ["Todos"] + ["Gabinete do Governador", "Secretaria Geral", "Financas", "Planeamento", "Infraestruturas", "Educacao", "Saude"])
         
         with col2:
@@ -1298,14 +1465,11 @@ def page_indexar():
         
         with col3:
             status_filter = st.selectbox("Status", ["Todos", "Digitalizado", "Em Analise", "Aprovado", "Arquivado", "Eliminado"])
-            doc_type = st.selectbox("Tipo", ["Todos", "Ofício", "Despacho", "Processo", "Relatório", "Contrato", "Certidão", "Edital", "Outro"])
-            security_level = st.selectbox("Nível de Segurança", ["Todos", "Publico", "Restrito", "Confidencial", "Secreto"])
-        
-        search_button = st.button("🔍 Pesquisar", use_container_width=False)
+            security_level = st.selectbox("Segurança", ["Todos", "Publico", "Restrito", "Confidencial", "Secreto"])
     
     try:
         sql = """
-            SELECT id, title, document_number, type, department, municipality, category, status, security_level, created_at, created_by
+            SELECT id, title, document_number, type, department, municipality, category, status, security_level, created_at
             FROM documents
             WHERE 1=1
         """
@@ -1313,8 +1477,8 @@ def page_indexar():
         
         if query:
             q = f"%{query}%"
-            sql += " AND (title LIKE ? OR document_number LIKE ? OR description LIKE ? OR keywords LIKE ?)"
-            params.extend([q, q, q, q])
+            sql += " AND (title LIKE ? OR document_number LIKE ? OR description LIKE ?)"
+            params.extend([q, q, q])
         
         if department != "Todos":
             sql += " AND department = ?"
@@ -1332,10 +1496,6 @@ def page_indexar():
             sql += " AND status = ?"
             params.append(status_filter)
         
-        if doc_type != "Todos":
-            sql += " AND type = ?"
-            params.append(doc_type)
-        
         if security_level != "Todos":
             sql += " AND security_level = ?"
             params.append(security_level)
@@ -1345,26 +1505,17 @@ def page_indexar():
         rows = db.execute_query(sql, tuple(params))
         
     except Exception as e:
-        st.error(f"Erro ao pesquisar documentos: {str(e)}")
-        logger.error(f"Erro ao pesquisar documentos: {e}")
+        st.error(f"Erro ao pesquisar: {str(e)}")
+        logger.error(f"Erro ao pesquisar: {e}")
         rows = []
     
     st.write(f"**{len(rows)}** resultado(s) encontrado(s).")
     
     if rows:
         df = pd.DataFrame(rows)
-        st.dataframe(df, hide_index=True, use_container_width=True)
-        
-        if st.button("📥 Exportar Resultados (CSV)"):
-            csv = df.to_csv(index=False).encode('utf-8')
-            st.download_button(
-                label="Baixar CSV",
-                data=csv,
-                file_name=f"documentos_exportados_{datetime.now().strftime('%Y%m%d')}.csv",
-                mime="text/csv"
-            )
+        st.dataframe(df, hide_index=True, width="stretch")
     else:
-        st.warning("Nenhum documento encontrado com os critérios selecionados.")
+        st.warning("Nenhum documento encontrado.")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================
@@ -1374,39 +1525,39 @@ def page_indexar():
 def page_tramitacao():
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
     st.title("Tramitação Electrónica")
-    st.caption("Encaminhe processos entre secretarias e municípios com rastreabilidade total")
+    st.caption("Encaminhe processos entre secretarias com rastreabilidade total")
     
-    tabs = st.tabs(["📝 Novo Processo", "🔄 Processos em Andamento", "📜 Histórico"])
+    tabs = st.tabs(["Novo Processo", "Em Andamento", "Histórico"])
     
     with tabs[0]:
         with st.form("process_form", clear_on_submit=True):
             col1, col2 = st.columns(2)
             
             with col1:
-                subject = st.text_input("Assunto do Processo *", placeholder="Descreva o assunto do processo")
-                origin = st.selectbox("Origem (Secretaria/Departamento) *", 
+                subject = st.text_input("Assunto *", placeholder="Descreva o assunto")
+                origin = st.selectbox("Origem *", 
                                      ["Gabinete do Governador", "Secretaria Geral", "Financas", "Planeamento", "Infraestruturas", "Educacao", "Saude"])
                 priority = st.selectbox("Prioridade", ["Normal", "Urgente", "Muito Urgente"])
-                deadline = st.date_input("Prazo (opcional)", value=None)
+                deadline = st.date_input("Prazo", value=None)
             
             with col2:
-                destination = st.selectbox("Destino (Município/Secretaria) *", 
+                destination = st.selectbox("Destino *", 
                                          ["Luanda", "Benguela", "Huila", "Cabinda", "Namibe", "Outro"])
-                observations = st.text_area("Observações", placeholder="Informações adicionais sobre o processo...")
-                related_docs = st.text_input("Documentos Relacionados", placeholder="Números dos documentos relacionados, separados por vírgula")
+                observations = st.text_area("Observações")
+                related_docs = st.text_input("Documentos Relacionados")
             
-            submitted = st.form_submit_button("📤 Registar Processo", use_container_width=True)
+            submitted = st.form_submit_button("Registar Processo", type="primary", width="stretch")
             
             if submitted:
                 subject = subject.strip()
                 if not subject:
-                    st.error("O assunto do processo é obrigatório.")
+                    st.error("O assunto é obrigatório.")
                     return
                 if not origin:
-                    st.error("Selecione a origem do processo.")
+                    st.error("Selecione a origem.")
                     return
                 if not destination:
-                    st.error("Selecione o destino do processo.")
+                    st.error("Selecione o destino.")
                     return
                 
                 process_number = generate_process_number()
@@ -1424,12 +1575,11 @@ def page_tramitacao():
                         now, now, st.session_state.username, deadline_str, observations, related_docs
                     ))
                     
-                    log_action(st.session_state.username, "Processo Criado", "Processos", process_number, 
-                              f"Assunto: {subject} | Origem: {origin} | Destino: {destination}")
+                    log_action(st.session_state.username, "Processo Criado", "Processos", process_number)
                     st.success(f"✅ Processo '{process_number}' registado com sucesso!")
                     
                 except Exception as e:
-                    st.error(f"Erro ao registar processo: {str(e)}")
+                    st.error(f"Erro ao registar: {str(e)}")
                     logger.error(f"Erro ao registar processo: {e}")
     
     with tabs[1]:
@@ -1437,16 +1587,10 @@ def page_tramitacao():
         
         try:
             rows = db.execute_query("""
-                SELECT id, process_number, subject, origin, destination, status, priority, created_at, deadline
+                SELECT id, process_number, subject, origin, destination, status, priority, created_at
                 FROM processes
                 WHERE status != 'Concluido'
-                ORDER BY 
-                    CASE priority 
-                        WHEN 'Muito Urgente' THEN 1 
-                        WHEN 'Urgente' THEN 2 
-                        ELSE 3 
-                    END,
-                    created_at DESC
+                ORDER BY created_at DESC
                 LIMIT 50
             """)
         except:
@@ -1461,55 +1605,31 @@ def page_tramitacao():
         if rows:
             for row in rows:
                 priority_icon = "🔴" if row.get('priority') == 'Muito Urgente' else "🟡" if row.get('priority') == 'Urgente' else "🟢"
-                with st.expander(f"{priority_icon} Processo {row['process_number']} - {row['subject']} ({row['status']})"):
+                with st.expander(f"{priority_icon} {row['process_number']} - {row['subject']}"):
                     col1, col2, col3 = st.columns(3)
                     col1.write(f"**Origem:** {row['origin']}")
                     col2.write(f"**Destino:** {row['destination']}")
                     col3.write(f"**Prioridade:** {row.get('priority', 'Normal')}")
-                    st.caption(f"Criado em: {row['created_at']}")
-                    
-                    if st.button(f"🔄 Atualizar Status - {row['process_number']}", key=f"update_{row['id']}"):
-                        new_status = st.selectbox("Novo Status", ["Em tramitacao", "Recebido", "Em analise", "Aprovado", "Concluido", "Arquivado"])
-                        if new_status:
-                            try:
-                                db.execute_update("""
-                                    UPDATE processes 
-                                    SET status = ?, updated_at = ? 
-                                    WHERE id = ?
-                                """, (new_status, datetime.now().isoformat(), row['id']))
-                                log_action(st.session_state.username, "Status Processo Atualizado", "Processos", 
-                                          row['process_number'], f"Novo status: {new_status}")
-                                st.success("Status atualizado com sucesso!")
-                                rerun_app()
-                            except Exception as e:
-                                st.error(f"Erro ao atualizar status: {str(e)}")
-                                logger.error(f"Erro ao atualizar status: {e}")
         else:
             st.info("Nenhum processo em tramitação.")
     
     with tabs[2]:
         st.subheader("Histórico de Processos")
-        
         try:
-            rows = db.execute_query("""
-                SELECT process_number, subject, origin, destination, status, priority, created_at, updated_at
-                FROM processes
-                ORDER BY updated_at DESC
-                LIMIT 50
-            """)
-        except:
             rows = db.execute_query("""
                 SELECT process_number, subject, origin, destination, status, created_at, updated_at
                 FROM processes
                 ORDER BY updated_at DESC
                 LIMIT 50
             """)
-        
-        if rows:
-            df = pd.DataFrame(rows)
-            st.dataframe(df, hide_index=True, use_container_width=True)
-        else:
-            st.info("Nenhum histórico de processos disponível.")
+            
+            if rows:
+                df = pd.DataFrame(rows)
+                st.dataframe(df, hide_index=True, width="stretch")
+            else:
+                st.info("Nenhum histórico disponível.")
+        except Exception as e:
+            st.error(f"Erro ao carregar histórico: {str(e)}")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================
@@ -1519,20 +1639,16 @@ def page_tramitacao():
 def page_auditoria():
     st.markdown('<div class="page-content">', unsafe_allow_html=True)
     st.title("Auditoria e Rastreabilidade")
-    st.caption("Registo completo de todas as operações realizadas no sistema")
+    st.caption("Registo completo de todas as operações realizadas")
     
     col1, col2 = st.columns([2, 1])
     with col1:
-        filter_action = st.text_input("Filtrar por Acção", placeholder="Ex: Login, Documento, Processo...")
+        filter_action = st.text_input("Filtrar por Acção")
     with col2:
-        filter_user = st.text_input("Filtrar por Utilizador", placeholder="Nome do utilizador...")
+        filter_user = st.text_input("Filtrar por Utilizador")
     
     try:
-        sql = """
-            SELECT id, username, action, created_at, details
-            FROM audit_log
-            WHERE 1=1
-        """
+        sql = "SELECT id, username, action, created_at, details FROM audit_log WHERE 1=1"
         params = []
         
         if filter_action:
@@ -1548,25 +1664,15 @@ def page_auditoria():
         rows = db.execute_query(sql, tuple(params))
         
     except Exception as e:
-        st.error(f"Erro ao carregar auditoria: {str(e)}")
+        st.error(f"Erro ao carregar: {str(e)}")
         logger.error(f"Erro ao carregar auditoria: {e}")
         rows = []
     
     if rows:
         df = pd.DataFrame(rows)
-        st.dataframe(df, hide_index=True, use_container_width=True)
-        
-        if st.button("📊 Estatísticas de Auditoria"):
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("Total de Ações", f"{len(rows)}")
-            with col2:
-                users = len(set(row["username"] for row in rows))
-                st.metric("Utilizadores", f"{users}")
-            with col3:
-                st.metric("Registos", f"{len(rows)}")
+        st.dataframe(df, hide_index=True, width="stretch")
     else:
-        st.info("Nenhum registo de auditoria encontrado.")
+        st.info("Nenhum registo encontrado.")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================
@@ -1582,7 +1688,7 @@ def page_administracao():
     st.title("Administração do Sistema")
     st.caption("Gestão de utilizadores, departamentos e configurações")
     
-    tabs = st.tabs(["👤 Utilizadores", "🏢 Departamentos", "📊 Estatísticas"])
+    tabs = st.tabs(["Utilizadores", "Departamentos", "Estatísticas"])
     
     with tabs[0]:
         st.subheader("Gestão de Utilizadores")
@@ -1590,7 +1696,7 @@ def page_administracao():
         with st.form("user_form"):
             col1, col2 = st.columns(2)
             with col1:
-                username = st.text_input("Nome de Utilizador *")
+                username = st.text_input("Utilizador *")
                 full_name = st.text_input("Nome Completo *")
                 email = st.text_input("Email")
             with col2:
@@ -1598,14 +1704,14 @@ def page_administracao():
                 role = st.selectbox("Perfil", ["Tecnico", "Gestor", "Administrador"])
                 department = st.selectbox("Departamento", ["Gabinete do Governador", "Secretaria Geral", "Financas", "Planeamento", "Infraestruturas", "Educacao", "Saude"])
             
-            submitted = st.form_submit_button("👤 Criar Utilizador", use_container_width=True)
+            submitted = st.form_submit_button("Criar Utilizador", type="primary", width="stretch")
             
             if submitted:
                 if not username.strip() or not full_name.strip():
-                    st.error("Nome de utilizador e nome completo são obrigatórios.")
+                    st.error("Preenchimento obrigatório.")
                     return
                 if not password:
-                    st.error("Palavra-passe é obrigatória.")
+                    st.error("Palavra-passe obrigatória.")
                     return
                 
                 password_hash = hash_password(password)
@@ -1618,13 +1724,12 @@ def page_administracao():
                     """, (username.strip(), password_hash, full_name.strip(), email, role, department, now))
                     
                     log_action(st.session_state.username, "Utilizador Criado", "Administracao", username)
-                    st.success(f"✅ Utilizador '{username}' criado com sucesso!")
+                    st.success(f"✅ Utilizador '{username}' criado!")
                     
                 except sqlite3.IntegrityError:
                     st.error(f"❌ Utilizador '{username}' já existe.")
                 except Exception as e:
-                    st.error(f"Erro ao criar utilizador: {str(e)}")
-                    logger.error(f"Erro ao criar utilizador: {e}")
+                    st.error(f"Erro: {str(e)}")
         
         st.subheader("Utilizadores do Sistema")
         try:
@@ -1636,10 +1741,9 @@ def page_administracao():
             
             if rows:
                 df = pd.DataFrame(rows)
-                st.dataframe(df, hide_index=True, use_container_width=True)
+                st.dataframe(df, hide_index=True, width="stretch")
         except Exception as e:
-            st.error(f"Erro ao carregar utilizadores: {str(e)}")
-            logger.error(f"Erro ao carregar utilizadores: {e}")
+            st.error(f"Erro: {str(e)}")
     
     with tabs[1]:
         st.subheader("Gestão de Departamentos")
@@ -1647,16 +1751,16 @@ def page_administracao():
         with st.form("department_form"):
             col1, col2 = st.columns(2)
             with col1:
-                dept_name = st.text_input("Nome do Departamento *")
+                dept_name = st.text_input("Nome *")
                 dept_code = st.text_input("Código *")
             with col2:
                 dept_desc = st.text_area("Descrição")
             
-            submitted = st.form_submit_button("🏢 Adicionar Departamento", use_container_width=True)
+            submitted = st.form_submit_button("Adicionar Departamento", type="primary", width="stretch")
             
             if submitted:
                 if not dept_name.strip() or not dept_code.strip():
-                    st.error("Nome e código são obrigatórios.")
+                    st.error("Preenchimento obrigatório.")
                     return
                 
                 try:
@@ -1665,39 +1769,40 @@ def page_administracao():
                         VALUES (?, ?, ?, ?)
                     """, (dept_name.strip(), dept_code.strip(), dept_desc, datetime.now().isoformat()))
                     
-                    log_action(st.session_state.username, "Departamento Adicionado", "Administracao", dept_name)
-                    st.success(f"✅ Departamento '{dept_name}' adicionado com sucesso!")
+                    st.success(f"✅ Departamento '{dept_name}' adicionado!")
                     
                 except sqlite3.IntegrityError:
                     st.error(f"❌ Departamento '{dept_name}' já existe.")
                 except Exception as e:
-                    st.error(f"Erro ao adicionar departamento: {str(e)}")
-                    logger.error(f"Erro ao adicionar departamento: {e}")
+                    st.error(f"Erro: {str(e)}")
     
     with tabs[2]:
         st.subheader("Estatísticas do Sistema")
         
         try:
+            user_count = db.execute_single("SELECT COUNT(*) as count FROM users")
+            doc_count = db.execute_single("SELECT COUNT(*) as count FROM documents")
+            proc_count = db.execute_single("SELECT COUNT(*) as count FROM processes")
+            action_count = db.execute_single("SELECT COUNT(*) as count FROM audit_log")
             stats = {
-                "Utilizadores": db.execute_single("SELECT COUNT(*) as count FROM users")['count'],
-                "Documentos": db.execute_single("SELECT COUNT(*) as count FROM documents")['count'],
-                "Processos": db.execute_single("SELECT COUNT(*) as count FROM processes")['count'],
-                "Ações": db.execute_single("SELECT COUNT(*) as count FROM audit_log")['count'],
+                "Utilizadores": user_count['count'] if user_count else 0,
+                "Documentos": doc_count['count'] if doc_count else 0,
+                "Processos": proc_count['count'] if proc_count else 0,
+                "Ações": action_count['count'] if action_count else 0
             }
         except Exception as e:
-            st.error(f"Erro ao carregar estatísticas: {str(e)}")
-            logger.error(f"Erro ao carregar estatísticas: {e}")
+            st.error(f"Erro: {str(e)}")
             stats = {"Utilizadores": 0, "Documentos": 0, "Processos": 0, "Ações": 0}
         
         col1, col2, col3, col4 = st.columns(4)
         with col1:
-            st.metric("👤 Utilizadores", stats["Utilizadores"])
+            st.metric("Utilizadores", stats["Utilizadores"])
         with col2:
-            st.metric("📄 Documentos", stats["Documentos"])
+            st.metric("Documentos", stats["Documentos"])
         with col3:
-            st.metric("📋 Processos", stats["Processos"])
+            st.metric("Processos", stats["Processos"])
         with col4:
-            st.metric("📝 Ações", stats["Ações"])
+            st.metric("Ações", stats["Ações"])
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================================
@@ -1717,13 +1822,14 @@ def logout():
 # ============================================================
 
 def main():
+    init_session()
     try:
         init_database()
         logger.info("Aplicação iniciada com sucesso")
         
     except Exception as e:
-        st.error(f"Erro crítico ao iniciar a aplicação: {str(e)}")
-        logger.error(f"Erro crítico ao iniciar a aplicação: {e}")
+        st.error(f"Erro crítico: {str(e)}")
+        logger.error(f"Erro crítico: {e}")
         st.stop()
     
     if not st.session_state.authenticated:
@@ -1731,17 +1837,8 @@ def main():
         return
     
     with st.sidebar:
-        st.markdown("""
-            <div style="text-align: center; padding: 0.5rem 0 1.5rem 0;">
-                <div style="font-size: 2.2rem; margin-bottom: 0.2rem;">🏛️</div>
-                <div style="font-size: 1rem; font-weight: 600; color: #e8edf3 !important;">
-                    Governo Provincial
-                </div>
-                <div style="font-size: 0.7rem; color: rgba(168, 200, 232, 0.7) !important; letter-spacing: 0.5px;">
-                    Gestão Documental
-                </div>
-            </div>
-        """, unsafe_allow_html=True)
+        st.markdown("### Governo Provincial")
+        st.caption("Gestão documental")
         
         st.markdown("---")
         
@@ -1755,31 +1852,30 @@ def main():
         
         page = st.radio(
             "Navegação",
-            ["📊 Painel", "📤 Digitalizar", "🔍 Indexar", "🔄 Tramitação", "📋 Auditoria", "⚙️ Administração"],
-            index=0,
-            format_func=lambda x: x.split(" ")[1] if " " in x else x
+            ["Painel", "Digitalizar", "Indexar", "Tramitação", "Auditoria", "Administração"],
+            index=0
         )
         
         st.markdown("---")
         
-        if st.button("🚪 Sair", use_container_width=True):
+        if st.button("Sair", icon=":material/logout:", width="stretch"):
             logout()
     
     pages = {
-        "📊 Painel": page_dashboard,
-        "📤 Digitalizar": page_digitalizar,
-        "🔍 Indexar": page_indexar,
-        "🔄 Tramitação": page_tramitacao,
-        "📋 Auditoria": page_auditoria,
-        "⚙️ Administração": page_administracao,
+        "Painel": page_dashboard,
+        "Digitalizar": page_digitalizar,
+        "Indexar": page_indexar,
+        "Tramitação": page_tramitacao,
+        "Auditoria": page_auditoria,
+        "Administração": page_administracao,
     }
     
     try:
         if page in pages:
             pages[page]()
     except Exception as e:
-        st.error(f"Erro ao carregar página: {str(e)}")
-        logger.error(f"Erro ao carregar página {page}: {e}")
+        st.error(f"Erro: {str(e)}")
+        logger.error(f"Erro na página {page}: {e}")
     
     st.markdown("""
         <div class="footer">
